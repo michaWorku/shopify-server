@@ -12,7 +12,7 @@ import authRouter from './routes/authRoutes'
 import userRouter from './routes/userRoutes'
 import productRouter from './routes/productRoutes'
 import cartRouter from './routes/cartRoutes'
-
+import orderRouter from './routes/orderRoutes'
 
 dotenv.config();
 
@@ -37,7 +37,7 @@ app.use('api/auth', authRouter)
 app.use('api/users', userRouter)
 app.use('api/products', productRouter)
 app.use('api/carts', cartRouter)
-
+app.use('api/orders', orderRouter)
 
 app.all('*', notReachableRouteHandler);
 app.use(errorHandler);
