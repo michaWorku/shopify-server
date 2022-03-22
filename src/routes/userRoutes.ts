@@ -9,8 +9,6 @@ import {
 } from '../controllers/userController'
 const router = express.Router()
 
-
-
 router
     .route('/:id')
         .put(verifyTokenAndAuthorization, updateUser)

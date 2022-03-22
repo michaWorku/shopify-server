@@ -10,6 +10,7 @@ import { notReachableRouteHandler } from './middlewares/notReachableRouteHandler
 
 import authRouter from './routes/authRoutes'
 import userRouter from './routes/userRoutes'
+import productRouter from './routes/productRoutes'
 
 
 dotenv.config();
@@ -33,6 +34,7 @@ const PORT: String = config.get('PORT') as string
 
 app.use('api/auth', authRouter)
 app.use('api/users', userRouter)
+app.use('api/products', productRouter)
 
 
 app.all('*', notReachableRouteHandler);
