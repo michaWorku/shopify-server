@@ -1,12 +1,12 @@
 {
   "name": "shopify-server",
   "version": "1.0.0",
-  "description": "shopify API implementatio",
-  "main": "index.js",
+  "description": "shopify API implementation",
+  "main": "dist/src/index.js",
   "scripts": {
     "build": "rimraf dist && tsc",
     "preserve": "npm run build",
-    "serve": "cross-env NODE_ENV=development concurrently \"tsc --watch\" \"nodemon -q dist/index.js\"",
+    "serve": "cross-env NODE_ENV=development concurrently \"tsc --watch\" \"nodemon -q dist/src/index.js\"",
     "prestart": "npm run build",
     "start": "cross-env NODE_ENV=production node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -24,20 +24,25 @@
   "dependencies": {
     "config": "^3.3.7",
     "cross-env": "^7.0.3",
+    "crypto-js": "^4.1.1",
     "dayjs": "^1.11.0",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "helmet": "^5.0.2",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.2.7",
     "morgan": "^1.10.0",
     "pino": "^7.9.1",
     "pino-pretty": "^7.5.4",
     "rimraf": "^3.0.2",
+    "ts-node": "^10.7.0",
     "typescript": "^4.6.2"
   },
   "devDependencies": {
     "@types/config": "^0.0.41",
+    "@types/crypto-js": "^4.1.1",
     "@types/express": "^4.17.13",
+    "@types/jsonwebtoken": "^8.5.8",
     "@types/mongoose": "^5.11.97",
     "@types/morgan": "^1.9.3",
     "@types/node": "^17.0.22",
