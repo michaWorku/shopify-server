@@ -13,6 +13,7 @@ import userRouter from './routes/userRoutes'
 import productRouter from './routes/productRoutes'
 import cartRouter from './routes/cartRoutes'
 import orderRouter from './routes/orderRoutes'
+import stripeRouter from './routes/stripeRoute'
 
 dotenv.config();
 
@@ -38,6 +39,7 @@ app.use('api/users', userRouter)
 app.use('api/products', productRouter)
 app.use('api/carts', cartRouter)
 app.use('api/orders', orderRouter)
+app.use('api/checkout', stripeRouter)
 
 app.all('*', notReachableRouteHandler);
 app.use(errorHandler);
