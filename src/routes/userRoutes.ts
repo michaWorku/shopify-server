@@ -1,21 +1,35 @@
 import express from 'express'
-import { verifyTokenAndAuthorization,
-    verifyTokenAndAdmin, } from '../middlewares/protect'
+import { signout, updatePassword } from '../controllers/authController';
 import {
+    createUser,
+    getAllUsers,
+    getUser,
     updateUser,
     deleteUser,
-    getAllUsers,
-    getUserStats
+    getUserStats,
+    updateMe,
+    deleteMe
 } from '../controllers/userController'
-const router = express.Router()
+import { UserRoles } from '../helpers/helpers';
+import { ensureAuth } from '../middlewares/ensureAuth';
+import { getMe } from '../middlewares/getMe';
+import { restrictTo } from '../middlewares/restrictTo';
 
-router
-    .route('/:id')
-        .put(verifyTokenAndAuthorization, updateUser)
-        .delete(verifyTokenAndAuthorization,deleteUser)
+const router = express.Router({ mergeParams: true });
 
-router.get('/', verifyTokenAndAdmin, getAllUsers)
+router.use(ensureAuth);
 
-router.get('/stats',verifyTokenAndAdmin, getUserStats)
+router.get('/me', getMe, getUser);
+router.patch('/updatePassword', updatePassword);
+router.patch('/updateMe', updateMe);
+router.delete('/deleteMe', deleteMe);
+router.post('/signout', signout);
+
+router.use(restrictTo(UserRoles.ADMIN));
+
+router.route(`/`).get(getAllUsers).post(createUser);
+router.route(`/:id`).get(getUser).patch(updateUser).delete(deleteUser);
+
+router.get('/stats', getUserStats)
 
 export default router
