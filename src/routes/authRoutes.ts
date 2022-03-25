@@ -1,11 +1,11 @@
 import express from 'express'
-import { register, login, forgotPassword, resetPassword } from '../controllers/authController'
+import { signup, login, forgotPassword, resetPassword } from '../controllers/authController'
 
-const router = express.Router()
+const router = express.Router({ mergeParams: true });
 
-router.post('/register', register)
-router.post('/login', login)
+router.post('/signup', signup);
+router.post('/login', login);
 router.post('/forgotPassword', forgotPassword);
-router.patch('/resetPassword/:token', resetPassword)
+router.patch('/resetPassword/:token', resetPassword);
 
 export default router
