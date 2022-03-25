@@ -1,7 +1,7 @@
 import { catchAsync } from '../helpers/catchAsync'
 import {  Response, NextFunction } from 'express';
 import { RequestCustom } from '../@types'
-import ProductModel from '../models/Product';
+import ProductModel from '../models/productModel';
 import AppError from '../helpers/appError'
 
 //@desc Create Product 

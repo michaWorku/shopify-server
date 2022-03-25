@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/michaWorku/shopify-server#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",
     "config": "^3.3.7",

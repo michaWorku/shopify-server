@@ -1,7 +1,7 @@
 import { catchAsync } from '../helpers/catchAsync'
 import {  Response, NextFunction } from 'express';
 import { RequestCustom } from '../@types'
-import CartModel from '../models/Cart';
+import CartModel from '../models/cartModel';
 import AppError from '../helpers/appError'
 
 //@desc Create Cart 
