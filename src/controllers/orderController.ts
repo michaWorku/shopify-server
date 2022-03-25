@@ -20,34 +20,45 @@ const createOrder = catchAsync(async ( req: RequestCustom, res: Response, next: 
 //@route GET '/api/orders/'
 //@access private
 const getAllOrders = catchAsync(async ( req: RequestCustom, res: Response, next: NextFunction)=>{
-    const Orders = await OrderModel.find()
+    const orders = await OrderModel.find()
     
     res.status(200).json({
         status: 'success',
-        data: Orders
+        data: orders
     });
 })
 
 //@desc Get Order 
-//@route GET '/api/Orders/:id'
+//@route GET '/api/orders/:id'
 //@access private
 const getOrder = catchAsync(async ( req: RequestCustom, res: Response, next: NextFunction)=>{
-    const Order = await OrderModel.findById(req.params.id);
+    const order = await OrderModel.findById(req.params.id);
     res.status(200).json({
         status: 'success',
-        data : Order
+        data : order
     });
 })
 
 //@desc Get User Order 
-//@route GET '/api/Orders/find/:userId'
+//@route GET '/api/orders/:userId'
 //@access private
 const getUserOrders = catchAsync(async ( req: RequestCustom, res: Response, next: NextFunction)=>{
-    const Order = await OrderModel.findById(req.params.userId);
+    const orders = await OrderModel.find({ userId: req.params.userId });
     res.status(200).json({
         status: 'success',
-        data : Order
+        data : orders
     });
+})
+
+//@desc Get current user order 
+//@route GET '/api/orders/myOrders'
+//@access private
+const getMyOrders = catchAsync(async ( req: RequestCustom, res: Response, next: NextFunction)=>{
+  const orders = await OrderModel.find({ userId: req.user.id });
+  res.status(200).json({
+      status: 'success',
+      data : orders
+  });
 })
 
 //@desc Update Order 
@@ -124,5 +135,6 @@ export {
     updateOrder,
     deleteOrder,
     getUserOrders,
+    getMyOrders,
     getMonthlyIncome
 }

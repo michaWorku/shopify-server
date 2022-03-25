@@ -1,6 +1,4 @@
 import express from 'express'
-import { verifyTokenAndAuthorization,
-    verifyTokenAndAdmin, } from '../middlewares/protect'
 
 import {
     getAllProducts,
@@ -9,18 +7,20 @@ import {
     updateProduct,
     deleteProduct
 } from '../controllers/productController'
+import { UserRoles } from '../helpers/helpers'
+import { restrictTo } from '../middlewares/restrictTo'
 
 const router = express.Router()
 
 router
     .route('/')
         .get(getAllProducts)
-        .post(verifyTokenAndAdmin,createProduct)
+        .post(restrictTo(UserRoles.ADMIN),createProduct)
 
 router
     .route('/:id')
         .get(getProduct)
-        .put(verifyTokenAndAdmin, updateProduct)
-        .delete(verifyTokenAndAdmin, deleteProduct)
+        .put(restrictTo(UserRoles.ADMIN), updateProduct)
+        .delete(restrictTo(UserRoles.ADMIN), deleteProduct)
 
 export default router

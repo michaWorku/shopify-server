@@ -1,7 +1,4 @@
 import express from 'express'
-import {verifyToken,
-    verifyTokenAndAuthorization,
-    verifyTokenAndAdmin, } from '../middlewares/protect'
 
 import {
     createOrder,
@@ -10,24 +7,36 @@ import {
     updateOrder,
     deleteOrder,
     getUserOrders,
-    getMonthlyIncome
+    getMonthlyIncome,
+    getMyOrders
 } from '../controllers/orderController'
+import { UserRoles } from '../helpers/helpers';
+import { ensureAuth } from '../middlewares/ensureAuth';
+import { ensureIsOwnerOrAdmin } from '../middlewares/ensureIsOwnerOrAdmin';
+import { restrictTo } from '../middlewares/restrictTo';
 
 const router = express.Router()
+router.use(ensureAuth);
+router.get('/find/:userId', getUserOrders)
 
 router
     .route('/')
-        .get(verifyTokenAndAdmin, getAllOrders)
-        .post(verifyToken,createOrder)
+        .get(restrictTo(UserRoles.ADMIN), getAllOrders)
+        .post(ensureIsOwnerOrAdmin,createOrder)
+
+
+
+router.get('/myOrders', ensureIsOwnerOrAdmin, getMyOrders)
 
 router
     .route('/:id')
-        .get(verifyTokenAndAdmin, getOrder)
-        .put(verifyTokenAndAdmin, updateOrder)
-        .delete(verifyTokenAndAdmin, deleteOrder)
+        .get(getOrder)
+        .put(restrictTo(UserRoles.ADMIN), updateOrder)
+        .delete(restrictTo(UserRoles.ADMIN), deleteOrder)
 
-router.get('/find/:userId', verifyTokenAndAuthorization, getUserOrders)
+router.use(restrictTo(UserRoles.ADMIN));
 
-router.get('/income', verifyTokenAndAdmin, getMonthlyIncome)
+router.get('/:userId', getUserOrders)
+router.get('/income', getMonthlyIncome)
 
 export default router

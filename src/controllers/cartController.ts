@@ -32,10 +32,10 @@ const getAllCarts = catchAsync(async ( req: RequestCustom, res: Response, next: 
 //@route GET '/api/carts/:id'
 //@access private
 const getCart = catchAsync(async ( req: RequestCustom, res: Response, next: NextFunction)=>{
-    const Cart = await CartModel.findById(req.params.id);
+    const cart = await CartModel.findById(req.params.id);
     res.status(200).json({
         status: 'success',
-        data : Cart
+        data : cart
     });
 })
 
@@ -43,10 +43,21 @@ const getCart = catchAsync(async ( req: RequestCustom, res: Response, next: Next
 //@route GET '/api/carts/find/:userId'
 //@access private
 const getUserCart = catchAsync(async ( req: RequestCustom, res: Response, next: NextFunction)=>{
-    const Cart = await CartModel.findById(req.params.userId);
+    const cart = await CartModel.findById(req.params.userId);
     res.status(200).json({
         status: 'success',
-        data : Cart
+        data : cart
+    });
+})
+
+//@desc Get My Cart 
+//@route GET '/api/carts/:myCart'
+//@access private
+const getMyCart = catchAsync(async ( req: RequestCustom, res: Response, next: NextFunction)=>{
+    const cart = await CartModel.findOne({ userId: req.user.id });
+    res.status(200).json({
+        status: 'success',
+        data : cart
     });
 })
 
@@ -86,5 +97,6 @@ export {
     getCart,
     updateCart,
     deleteCart,
-    getUserCart
+    getUserCart,
+    getMyCart
 }
