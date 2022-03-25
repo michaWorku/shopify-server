@@ -8,7 +8,10 @@ export interface Products {
 export interface Order extends Document {
   userId: Types.ObjectId,
   products: Types.DocumentArray<Products>,
+  photo: string, 
+  customer: string, 
   amount : number,
+  method: string,
   address : {},
   status: string,
   }
