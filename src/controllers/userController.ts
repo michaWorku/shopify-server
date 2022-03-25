@@ -3,67 +3,40 @@ import {  Response, NextFunction } from 'express';
 import { RequestCustom } from '../@types'
 import UserModel from '../models/userModel';
 import AppError from '../helpers/appError'
-import CryptoJS from 'crypto-js'
-import config from 'config'
-
-//@desc Update User 
-//@route PUT '/api/users/:id'
-//@access private
-const updateUser = catchAsync(async ( req: RequestCustom, res: Response, _next: NextFunction)=>{
-
-    if(req.user.id !== req.params.id || req.user.isAdmin)
-        throw new AppError("You can update only your account!", 403)  
-    
-    if(req.body.password){
-        const jwtSecret = config.get('JWT_SECRET') as string
-        req.body.password = CryptoJS.AES.encrypt(req.body.password, jwtSecret).toString()
-
-        const updatedUser = await UserModel.findByIdAndUpdate(
-            req.params.id,
-            {
-              $set: req.body,
-            },
-            { new: true }
-          );
-        
-        res.status(200).json({
-            status: 'success',
-            data: { updatedUser },
-          });
-    }
-})
-
-//@desc Delete User 
-//@route DELETE '/api/users/:id'
-//@access private
-const deleteUser = catchAsync(async ( req: RequestCustom, res: Response, next: NextFunction)=>{
-    if(req.user.id !== req.params.id || req.user.isAdmin)
-        throw new AppError("You can delete only your account!", 403)  
-    
-    const document = await UserModel.findByIdAndDelete(req.params.id);
-
-    if (!document) throw new AppError(`ID (${req.params.id}) not found!`, 404);
-
-    res.status(204).json({
-        status: 'success',
-        data: null,
-      });
-})
+import {
+  deleteOne,
+  updateOne,
+  createOne,
+  getAll,
+  getOne,
+} from './HandlerFactory';
+import { filterObj } from '../helpers/helpers';
+import { createSendToken } from './authController';
 
 //@desc Get All Users 
 //@route GET '/api/users/'
 //@access private
-const getAllUsers = catchAsync(async ( req: RequestCustom, res: Response, next: NextFunction)=>{
-    const query = req.query.new;
-    if(!req.user.isAdmin){
-        throw new AppError("You are not allowed to see all users!", 403)
-    }
+const getAllUsers = getAll(UserModel);
 
-    const users = query
-        ? await UserModel.find().sort({ _id: -1 }).limit(5)
-        : await UserModel.find();
-      res.status(200).json({status: 'success', data: users});
-})
+//@desc Get a User
+//@route GET '/api/users/:id'
+//@access private
+const getUser = getOne(UserModel, [['_id', 'id']]);
+
+//@desc Update User 
+//@route PUT '/api/users/:id'
+//@access private
+const updateUser = updateOne(UserModel);
+
+//@desc Delete User 
+//@route DELETE '/api/users/:id'
+//@access private
+const deleteUser = deleteOne(UserModel);
+
+//@desc Create a User 
+//@route POST '/api/users/'
+//@access private
+const createUser = createOne(UserModel);
 
 //@desc Get User Stats 
 //@route GET '/api/stats'
@@ -92,9 +65,44 @@ const getUserStats = catchAsync(async ( req: RequestCustom, res: Response, next:
     })
 })
 
+//@desc Update current user
+//@route PATCH '/api/users/updateMe'
+//@access private
+const updateMe = catchAsync(
+  async (req: RequestCustom, res: Response, _next: NextFunction) => {
+    if (req.body.password || req.body.passwordConfirm)
+      throw new AppError('Password cant be updated through here', 400);
+
+    const updateFields = filterObj(req.body, 'name', 'email');
+
+    const user = await UserModel.findByIdAndUpdate(req.user.id, updateFields, {
+      new: true,
+    });
+
+    createSendToken(user, 200, res);
+  }
+);
+
+//@desc Deactivate current user
+//@route DELETE '/api/users/deleteMe'
+//@access private
+const deleteMe = catchAsync(
+  async (req: RequestCustom, res: Response, _next: NextFunction) => {
+    await UserModel.findByIdAndUpdate(req.user.id, { active: false });
+
+    res.status(204).json({
+      status: 'success',
+    });
+  }
+);
+
 export {
+    createUser,
+    getAllUsers,
+    getUser,
     updateUser,
     deleteUser,
-    getAllUsers,
-    getUserStats
+    getUserStats,
+    updateMe,
+    deleteMe
 }
