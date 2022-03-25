@@ -5,6 +5,9 @@ import UserModel from '../models/userModel';
 import AppError from './appError'
 import config from 'config'
 
+export const hasExpired = (tokenDate: number) =>
+  tokenDate > new Date().getTime();
+
 export const getTokenInfo = async <T>(token: string): Promise<T> => {
     const jwtSecret = config.get('JWT_SECRET') as string
     return (await promisify(jwt.verify)(
