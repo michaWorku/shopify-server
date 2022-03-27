@@ -79,9 +79,9 @@ const login = catchAsync( async (req:RequestCustom, res: Response, _next:NextFun
       throw new AppError('User credentials needed', 400);
 
     if (token) {
-      user = await getUserWithToken(token);
+      user = await getUserWithToken(token)
     } else {
-      user = await UserModel.findOne({ email })
+      user = await UserModel.findOne({ email }).select("+password");
 
       if (!user || !(await user.correctPassword(password, user.password as string)))
         throw new AppError(`Invalid email or password`, 401);

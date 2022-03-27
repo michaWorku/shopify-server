@@ -13,6 +13,6 @@ export interface User extends Document {
     active: boolean;
     correctPassword(candidatePassword : string,
       password: string): Promise<boolean>;
-    changedPasswordAfter(): boolean;
+    changedPasswordAfter(JWTTimestamp: number): boolean;
     createPasswordResetToken(): string;
   }
