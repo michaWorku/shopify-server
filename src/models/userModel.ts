@@ -50,8 +50,7 @@ const UserSchema = new mongoose.Schema<User>(
     passwordResetExpires: Date,
     active: {
       type: Boolean,
-      default: true,
-      select: false
+      default: true
     }
   },
   {

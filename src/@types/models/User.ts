@@ -4,7 +4,7 @@ export interface User extends Document {
     name: string;
     email: string;
     photo?: string;
-    role: "user" | "admin";
+    role?: "user" | "admin";
     password: string | undefined;
     passwordConfirm: string | undefined;
     passwordChangedAt?: Date | undefined;

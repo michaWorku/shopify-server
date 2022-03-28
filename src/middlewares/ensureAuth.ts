@@ -7,8 +7,7 @@ import { JWTLoginType } from '../@types/JWTLoginType/JWTLoginType';
 
 export const ensureAuth = catchAsync(
     async (req:RequestCustom, _res:Response, next:NextFunction) => {
-      console.log(next)
-
+      
       const bearer = req.headers.authorization;
       if (!bearer) throw new AppError('Please log in to get access', 401);
   
